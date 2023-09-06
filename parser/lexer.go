@@ -14,11 +14,16 @@ type token struct {
 
 var (
 	tokens = []token{
+		{tokenType: LPAREN, re: regexp.MustCompile("^\\(")},
+		{tokenType: RPAREN, re: regexp.MustCompile("^\\)")},
 		{tokenType: EQ, re: regexp.MustCompile("^равно")},
+		{tokenType: PRINT, re: regexp.MustCompile("^показать")},
 		{tokenType: MUL, re: regexp.MustCompile("^умножить на")},
 		{tokenType: PLUS, re: regexp.MustCompile("^плюс")},
+		{tokenType: MINUS, re: regexp.MustCompile("^минус")},
 		{tokenType: NUMBER, re: regexp.MustCompile("^[0-9]+")},
 		{tokenType: IDENT, re: regexp.MustCompile("^[А-Я]+")},
+		{tokenType: STRING, re: regexp.MustCompile("^'[^']+'")},
 	}
 )
 

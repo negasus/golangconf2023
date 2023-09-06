@@ -10,6 +10,10 @@ type NumberExpr struct {
 	Value string
 }
 
+type StringExpr struct {
+	Value string
+}
+
 type ArithmeticOpExpr struct {
 	Operator string
 	Lhs      Expr

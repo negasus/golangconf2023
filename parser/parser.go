@@ -15,16 +15,20 @@ import (
 type YYSymType struct {
 	yys   int
 	token *ast.Token
-
-	stmt ast.Stmt
-	expr ast.Expr
+	stmt  ast.Stmt
+	expr  ast.Expr
 }
 
 const IDENT = 57346
 const NUMBER = 57347
 const EQ = 57348
-const PLUS = 57349
-const MUL = 57350
+const PRINT = 57349
+const LPAREN = 57350
+const RPAREN = 57351
+const STRING = 57352
+const PLUS = 57353
+const MINUS = 57354
+const MUL = 57355
 
 var YYToknames = [...]string{
 	"$end",
@@ -33,7 +37,12 @@ var YYToknames = [...]string{
 	"IDENT",
 	"NUMBER",
 	"EQ",
+	"PRINT",
+	"LPAREN",
+	"RPAREN",
+	"STRING",
 	"PLUS",
+	"MINUS",
 	"MUL",
 }
 
@@ -43,7 +52,7 @@ const YYEofCode = 1
 const YYErrCode = 2
 const YYInitialStackSize = 16
 
-//line ./parser/parser.go.y:57
+//line ./parser/parser.go.y:67
 
 //line yacctab:1
 var YYExca = [...]int8{
@@ -54,38 +63,41 @@ var YYExca = [...]int8{
 
 const YYPrivate = 57344
 
-const YYLast = 12
+const YYLast = 22
 
 var YYAct = [...]int8{
-	5, 8, 9, 9, 7, 6, 3, 4, 2, 10,
-	11, 1,
+	7, 15, 14, 12, 13, 14, 6, 11, 12, 13,
+	14, 10, 9, 16, 17, 18, 3, 8, 2, 4,
+	5, 1,
 }
 
 var YYPact = [...]int16{
-	-1000, 2, -1000, 1, 0, -6, -1000, -1000, 0, 0,
-	-5, -1000,
+	-1000, 12, -1000, 14, -2, 7, 7, -3, -1000, -1000,
+	-1000, -8, 7, 7, 7, -1000, -11, -11, -1000,
 }
 
 var YYPgo = [...]int8{
-	0, 11, 8, 0,
+	0, 21, 18, 0,
 }
 
 var YYR1 = [...]int8{
-	0, 1, 1, 2, 3, 3, 3, 3,
+	0, 1, 1, 2, 2, 3, 3, 3, 3, 3,
+	3,
 }
 
 var YYR2 = [...]int8{
-	0, 0, 2, 3, 1, 1, 3, 3,
+	0, 0, 2, 3, 4, 1, 1, 1, 3, 3,
+	3,
 }
 
 var YYChk = [...]int16{
-	-1000, -1, -2, 4, 6, -3, 5, 4, 7, 8,
-	-3, -3,
+	-1000, -1, -2, 4, 7, 6, 8, -3, 10, 5,
+	4, -3, 11, 12, 13, 9, -3, -3, -3,
 }
 
 var YYDef = [...]int8{
-	1, -2, 2, 0, 0, 3, 4, 5, 0, 0,
-	6, 7,
+	1, -2, 2, 0, 0, 0, 0, 3, 5, 6,
+	7, 0, 0, 0, 0, 4, 8, 9, 10,
 }
 
 var YYTok1 = [...]int8{
@@ -93,7 +105,8 @@ var YYTok1 = [...]int8{
 }
 
 var YYTok2 = [...]int8{
-	2, 3, 4, 5, 6, 7, 8,
+	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	12, 13,
 }
 
 var YYTok3 = [...]int8{
@@ -439,43 +452,61 @@ YYdefault:
 
 	case 1:
 		YYDollar = YYS[YYpt-0 : YYpt+1]
-//line ./parser/parser.go.y:28
+//line ./parser/parser.go.y:27
 		{
 		}
 	case 2:
 		YYDollar = YYS[YYpt-2 : YYpt+1]
-//line ./parser/parser.go.y:30
+//line ./parser/parser.go.y:29
 		{
 			l := YYlex.(*Lexer)
 			l.stmts = append(l.stmts, YYDollar[2].stmt)
 		}
 	case 3:
 		YYDollar = YYS[YYpt-3 : YYpt+1]
-//line ./parser/parser.go.y:36
+//line ./parser/parser.go.y:35
 		{
 			YYVAL.stmt = &ast.AssignStmt{Ident: &ast.IdentExpr{Value: YYDollar[1].token.Value}, Expr: YYDollar[3].expr}
 		}
 	case 4:
-		YYDollar = YYS[YYpt-1 : YYpt+1]
-//line ./parser/parser.go.y:41
+		YYDollar = YYS[YYpt-4 : YYpt+1]
+//line ./parser/parser.go.y:39
 		{
-			YYVAL.expr = &ast.NumberExpr{Value: YYDollar[1].token.Value}
+			YYVAL.stmt = &ast.PrintStmt{Expr: YYDollar[3].expr}
 		}
 	case 5:
 		YYDollar = YYS[YYpt-1 : YYpt+1]
-//line ./parser/parser.go.y:45
+//line ./parser/parser.go.y:44
+		{
+			YYVAL.expr = &ast.StringExpr{Value: YYDollar[1].token.Value}
+		}
+	case 6:
+		YYDollar = YYS[YYpt-1 : YYpt+1]
+//line ./parser/parser.go.y:48
+		{
+			YYVAL.expr = &ast.NumberExpr{Value: YYDollar[1].token.Value}
+		}
+	case 7:
+		YYDollar = YYS[YYpt-1 : YYpt+1]
+//line ./parser/parser.go.y:52
 		{
 			YYVAL.expr = &ast.IdentExpr{Value: YYDollar[1].token.Value}
 		}
-	case 6:
+	case 8:
 		YYDollar = YYS[YYpt-3 : YYpt+1]
-//line ./parser/parser.go.y:49
+//line ./parser/parser.go.y:56
 		{
 			YYVAL.expr = &ast.ArithmeticOpExpr{Lhs: YYDollar[1].expr, Operator: "+", Rhs: YYDollar[3].expr}
 		}
-	case 7:
+	case 9:
 		YYDollar = YYS[YYpt-3 : YYpt+1]
-//line ./parser/parser.go.y:53
+//line ./parser/parser.go.y:60
+		{
+			YYVAL.expr = &ast.ArithmeticOpExpr{Lhs: YYDollar[1].expr, Operator: "-", Rhs: YYDollar[3].expr}
+		}
+	case 10:
+		YYDollar = YYS[YYpt-3 : YYpt+1]
+//line ./parser/parser.go.y:64
 		{
 			YYVAL.expr = &ast.ArithmeticOpExpr{Lhs: YYDollar[1].expr, Operator: "*", Rhs: YYDollar[3].expr}
 		}

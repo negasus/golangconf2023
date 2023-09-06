@@ -12,28 +12,47 @@ var (
 )
 
 func Run(stmts []ast.Stmt) error {
-	var lastVarName string
-
 	for _, s := range stmts {
-		st, ok := s.(*ast.AssignStmt)
-		if !ok {
+		switch ss := s.(type) {
+		case *ast.PrintStmt:
+			if err := printStatement(ss); err != nil {
+				return err
+			}
+		case *ast.AssignStmt:
+			if err := assignStatement(ss); err != nil {
+				return err
+			}
+		default:
 			return fmt.Errorf("неожиданная инструкция %T", s)
 		}
+	}
 
-		varName := st.Ident.Value
-		value, err := calcExpr(st.Expr)
+	return nil
+}
+
+func assignStatement(s *ast.AssignStmt) error {
+	varName := s.Ident.Value
+	value, err := calcExpr(s.Expr)
+	if err != nil {
+		return err
+	}
+	vars[varName] = value
+	return nil
+}
+
+func printStatement(s *ast.PrintStmt) error {
+	switch ss := s.Expr.(type) {
+	case *ast.StringExpr:
+		v := ss.Value[1 : len(ss.Value)-1] // trim quotes
+		fmt.Printf("%s\n", v)
+
+	default:
+		v, err := calcExpr(s.Expr)
 		if err != nil {
 			return err
 		}
-		vars[varName] = value
-		fmt.Printf("%s = %d\n", varName, value)
-
-		lastVarName = varName
+		fmt.Printf("%d\n", v)
 	}
-
-	v := vars[lastVarName]
-
-	fmt.Printf("Ответ: %s = %d\n", lastVarName, v)
 
 	return nil
 }
@@ -42,12 +61,14 @@ func calcExpr(e ast.Expr) (int, error) {
 	switch ex := e.(type) {
 	case *ast.NumberExpr:
 		return strconv.Atoi(ex.Value)
+
 	case *ast.IdentExpr:
 		v, ok := vars[ex.Value]
 		if !ok {
 			return 0, fmt.Errorf("переменная %s не найдена", ex.Value)
 		}
 		return v, nil
+
 	case *ast.ArithmeticOpExpr:
 		vLeft, errLeft := calcExpr(ex.Lhs)
 		if errLeft != nil {
@@ -61,10 +82,12 @@ func calcExpr(e ast.Expr) (int, error) {
 		switch ex.Operator {
 		case "+":
 			return vLeft + vRight, nil
+		case "-":
+			return vLeft - vRight, nil
 		case "*":
 			return vLeft * vRight, nil
 		}
 	}
 
-	panic(fmt.Sprintf("ошибка в выражении, %#v", e))
+	return 0, fmt.Errorf("неожиданное выражение %#v", e)
 }
