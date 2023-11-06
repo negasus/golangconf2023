@@ -54,14 +54,14 @@ expr:
         }
         |
         expr PLUS expr {
-        	$$ = &ast.ArithmeticOpExpr{Lhs: $1, Operator: "+", Rhs: $3}
+        	$$ = &ast.BinaryExpr{Lhs: $1, Operator: "+", Rhs: $3}
         }
         |
         expr MINUS expr {
-        	$$ = &ast.ArithmeticOpExpr{Lhs: $1, Operator: "-", Rhs: $3}
+        	$$ = &ast.BinaryExpr{Lhs: $1, Operator: "-", Rhs: $3}
         }
         |
         expr MUL expr {
-        	$$ = &ast.ArithmeticOpExpr{Lhs: $1, Operator: "*", Rhs: $3}
+        	$$ = &ast.BinaryExpr{Lhs: $1, Operator: "*", Rhs: $3}
         }
 %%

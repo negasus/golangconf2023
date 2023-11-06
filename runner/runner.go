@@ -69,7 +69,7 @@ func calcExpr(e ast.Expr) (int, error) {
 		}
 		return v, nil
 
-	case *ast.ArithmeticOpExpr:
+	case *ast.BinaryExpr:
 		vLeft, errLeft := calcExpr(ex.Lhs)
 		if errLeft != nil {
 			return 0, errLeft

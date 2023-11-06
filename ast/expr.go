@@ -14,7 +14,7 @@ type StringExpr struct {
 	Value string
 }
 
-type ArithmeticOpExpr struct {
+type BinaryExpr struct {
 	Operator string
 	Lhs      Expr
 	Rhs      Expr

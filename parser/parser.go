@@ -496,19 +496,19 @@ YYdefault:
 		YYDollar = YYS[YYpt-3 : YYpt+1]
 //line ./parser/parser.go.y:56
 		{
-			YYVAL.expr = &ast.ArithmeticOpExpr{Lhs: YYDollar[1].expr, Operator: "+", Rhs: YYDollar[3].expr}
+			YYVAL.expr = &ast.BinaryExpr{Lhs: YYDollar[1].expr, Operator: "+", Rhs: YYDollar[3].expr}
 		}
 	case 9:
 		YYDollar = YYS[YYpt-3 : YYpt+1]
 //line ./parser/parser.go.y:60
 		{
-			YYVAL.expr = &ast.ArithmeticOpExpr{Lhs: YYDollar[1].expr, Operator: "-", Rhs: YYDollar[3].expr}
+			YYVAL.expr = &ast.BinaryExpr{Lhs: YYDollar[1].expr, Operator: "-", Rhs: YYDollar[3].expr}
 		}
 	case 10:
 		YYDollar = YYS[YYpt-3 : YYpt+1]
 //line ./parser/parser.go.y:64
 		{
-			YYVAL.expr = &ast.ArithmeticOpExpr{Lhs: YYDollar[1].expr, Operator: "*", Rhs: YYDollar[3].expr}
+			YYVAL.expr = &ast.BinaryExpr{Lhs: YYDollar[1].expr, Operator: "*", Rhs: YYDollar[3].expr}
 		}
 	}
 	goto YYstack /* stack new state and value */
